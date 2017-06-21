@@ -94,6 +94,25 @@ Options:
   -i, --stdin=false: Pass stdin to the container
   -t, --tty=false: Stdin is a TTY
 ```
+## 在容器内部执行命令
+`kubectl exec`用于在一个正在运行的容器执行命令。跟docker的exec命令类似。
+```sh
+  # Get output from running 'date' from pod 123456-7890, using the first container by default
+  kubectl exec 123456-7890 date
+  
+  # Get output from running 'date' in ruby-container from pod 123456-7890
+  kubectl exec 123456-7890 -c ruby-container date
+  
+  # Switch to raw terminal mode, sends stdin to 'bash' in ruby-container from pod 123456-7890
+  # and sends stdout/stderr from 'bash' back to the client
+  kubectl exec 123456-7890 -c ruby-container -i -t -- bash -il
+
+Options:
+  -c, --container='': Container name. If omitted, the first container in the pod will be chosen
+  -p, --pod='': Pod name
+  -i, --stdin=false: Pass stdin to the container
+  -t, --tty=false: Stdin is a TT
+```
 
 ## 端口转发
 
