@@ -115,22 +115,38 @@ Options:
 ```
 
 ## 端口转发
-
 `kubectl port-forward`用于将本地端口转发到指定的Pod。
-
 ```sh
 # Listen on port 8888 locally, forwarding to 5000 in the pod
 kubectl port-forward mypod 8888:5000
 ```
 
-## kubectl proxy
-
-kubectl proxy命令提供了一个Kubernetes API服务的HTTP代理。
-
+## API Server 代理
+`kubectl proxy`命令提供了一个Kubernetes API服务的HTTP代理。
 ```sh
 $ kubectl proxy --port=8080
 Starting to serve on 127.0.0.1:8080
 ```
+## 文件拷贝
+`kubectl cp`支持从容器中拷贝，或者拷贝文件到容器中
+```sh
+  # Copy /tmp/foo_dir local directory to /tmp/bar_dir in a remote pod in the default namespace
+  kubectl cp /tmp/foo_dir <some-pod>:/tmp/bar_dir
+  
+  # Copy /tmp/foo local file to /tmp/bar in a remote pod in a specific container
+  kubectl cp /tmp/foo <some-pod>:/tmp/bar -c <specific-container>
+  
+  # Copy /tmp/foo local file to /tmp/bar in a remote pod in namespace <some-namespace>
+  kubectl cp /tmp/foo <some-namespace>/<some-pod>:/tmp/bar
+  
+  # Copy /tmp/foo from a remote pod to /tmp/bar locally
+  kubectl cp <some-namespace>/<some-pod>:/tmp/foo /tmp/bar
+
+Options:
+  -c, --container='': Container name. If omitted, the first container in the pod will be chosen
+```
+注意：文件拷贝依赖于tar命令，所以容器中需要能够执行tar命令
+
 
 可以通过代理地址`http://localhost:8080/api/`来直接访问Kubernetes API，比如查询Pod列表
 
